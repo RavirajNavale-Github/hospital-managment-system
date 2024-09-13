@@ -34,7 +34,7 @@ class AppointmentController extends Controller
                 'status' => 'error',
                 'message' => 'Validation error',
                 'errors' => $validatedData->errors(),
-            ], 422);
+            ], 401);
         }
 
         // If validation passes, create the appointment

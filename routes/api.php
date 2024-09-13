@@ -21,4 +21,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Appointments Management
     Route::get('appointments', [DashboardController::class, 'viewAppointments']);
     Route::put('appointments/{id}', [DashboardController::class, 'updateAppointmentStatus']);
+
+    // Doctor Management
+    Route::post('doctors', [DashboardController::class, 'addDoctor']);
+    Route::get('doctors', [DashboardController::class, 'dashboard']);  // Same as dashboard for listing doctors
+    Route::put('doctors/{id}', [DashboardController::class, 'updateDoctor']);
+    Route::delete('doctors/{id}', [DashboardController::class, 'deleteDoctor']);
 });

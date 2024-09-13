@@ -43,7 +43,7 @@ class AuthController extends Controller
             'status' => true,
             'message' => 'User reistred successfully',
             'user' => $user
-        ], 200);
+        ], 201);
     }
 
     public function login(Request $request)
