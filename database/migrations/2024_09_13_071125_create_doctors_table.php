@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('doctors', function (Blueprint $table) {
             $table->id();
+            $table->string('profile_image')->nullable(); // Store image path
             $table->string('name');
-            $table->string('email');
-            $table->string('contact');
+            $table->string('email')->unique();
+            $table->string('phone_number');
             $table->string('department');
-            $table->string('image');
             $table->timestamps();
         });
     }
