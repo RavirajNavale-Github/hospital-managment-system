@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\appointmentController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/bookAppointment', function () {
+    return view('appointment');
 });

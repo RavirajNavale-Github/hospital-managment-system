@@ -14,11 +14,11 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $totalAppointments = Appointment::whereDate('booking_date', now())->count();
-        $doctors = Doctor::all();
+        $totalDoctors = Doctor::all()->count();
 
         return response()->json([
             'total_appointments' => $totalAppointments,
-            'doctors' => $doctors,
+            'doctors' => $totalDoctors,
         ]);
     }
 
@@ -61,7 +61,6 @@ class DashboardController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Handle profile image upload
         if ($request->hasFile('profile_image')) {
             $imagePath = $request->file('profile_image')->store('images/doctors', 'public');
         } else {
@@ -79,7 +78,75 @@ class DashboardController extends Controller
         return response()->json(['message' => 'Doctor added successfully', 'doctor' => $doctor], 201);
     }
 
+    //Get all doctors
+    public function getDoctors()
+    {
+        $doctors = Doctor::all();
+
+        if (!$doctors) {
+            return response()->json(['message' => 'No any doctor registered'], 404);
+        }
+
+        return response()->json(['message' => 'All Doctors', 'doctors' => $doctors]);
+    }
+
+    //Get single doctor
+    public function getDoctor(Request $request, $id)
+    {
+        // Find the doctor by ID
+        $doctor = Doctor::find($id);
+
+        if (!$doctor) {
+            return response()->json(['message' => 'Doctor not found'], 404);
+        }
+
+        return response()->json(['message' => 'Selected single doctor', 'doctor' => $doctor]);
+    }
+
     //Update doctor details
+    // public function updateDoctor(Request $request, $id)
+    // {
+    //     // Find the doctor by ID
+    //     $doctor = Doctor::find($id);
+
+    //     if (!$doctor) {
+    //         return response()->json(['message' => 'Doctor not found'], 404);
+    //     }
+
+    //     // Validate the incoming request
+    //     $validator = Validator::make($request->all(), [
+    //         'profile_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+    //         'name' => 'required|string|max:255', // Name is required to be updated
+    //         'email' => 'required|email|unique:doctors,email,' . $doctor->id,
+    //         'phone_number' => 'required|string|max:15',
+    //         'department' => 'required|string|max:255',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 422);
+    //     }
+
+    //     // Handle profile image upload (keep old one if not provided)
+    //     if ($request->hasFile('profile_image')) {
+    //         // Store the new image and update the path
+    //         $imagePath = $request->file('profile_image')->store('images/doctors', 'public');
+    //         $doctor->profile_image = $imagePath;
+    //     }
+
+    //     // Update the doctor's details explicitly with new values from the request
+    //     $doctor->name = $request->input('name');
+    //     $doctor->email = $request->input('email');
+    //     $doctor->phone_number = $request->input('phone_number');
+    //     $doctor->department = $request->input('department');
+
+    //     // Save the updated doctor details
+    //     $doctor->save();
+
+    //     return response()->json(['message' => 'Doctor updated successfully', 'doctor' => $doctor], 200);
+    // }
+
+
+
     public function updateDoctor(Request $request, $id)
     {
         // Find the doctor by ID
@@ -89,31 +156,49 @@ class DashboardController extends Controller
             return response()->json(['message' => 'Doctor not found'], 404);
         }
 
-        // Define validation rules
+        return response()->json([
+            'received_data' => $request->all(),
+            'files' => $request->file(), // Check if any file is being received
+        ], 200);
+
+        // Validate the incoming request for both form-data and JSON
         $validator = Validator::make($request->all(), [
-            'profile_image' => 'nullable|url',
+            'profile_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:doctors,email,' . $id,
+            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
             'phone_number' => 'required|string|max:15',
             'department' => 'required|string|max:255',
         ]);
 
-        // Check if validation fails
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+                'input_data' => $request->all(),
+            ], 422);
         }
 
-        // Update the doctor with validated data
-        $doctor->update($request->only([
-            'profile_image',
-            'name',
-            'email',
-            'phone_number',
-            'department'
-        ]));
 
-        return response()->json(['message' => 'Doctor details updated successfully']);
+        // Handle profile image upload (keep old one if not provided)
+        if ($request->hasFile('profile_image')) {
+            // Store the new image and update the path
+            $imagePath = $request->file('profile_image')->store('images/doctors', 'public');
+            $doctor->profile_image = $imagePath;
+        }
+
+        // Update the doctor's details explicitly with new values from the request
+        $doctor->name = $request->input('name');
+        $doctor->email = $request->input('email');
+        $doctor->phone_number = $request->input('phone_number');
+        $doctor->department = $request->input('department');
+
+        // Save the updated doctor details
+        $doctor->save();
+
+        return response()->json(['message' => 'Doctor updated successfully', 'doctor' => $doctor], 200);
     }
+
+
 
     //Delete doctor
     public function deleteDoctor($id)

@@ -24,7 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Doctor Management
     Route::post('doctors', [DashboardController::class, 'addDoctor']);
-    Route::get('doctors', [DashboardController::class, 'dashboard']);  // Same as dashboard for listing doctors
+    Route::get('doctors', [DashboardController::class, 'getDoctors']);
+    Route::get('doctor/{id}', [DashboardController::class, 'getDoctor']);
+    // Route::get('doctors', [DashboardController::class, 'dashboard']);  // Same as dashboard for listing doctors
     Route::put('doctors/{id}', [DashboardController::class, 'updateDoctor']);
     Route::delete('doctors/{id}', [DashboardController::class, 'deleteDoctor']);
 });
