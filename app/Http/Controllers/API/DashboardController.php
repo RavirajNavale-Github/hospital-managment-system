@@ -153,7 +153,7 @@ class DashboardController extends Controller
         $doctor = Doctor::find($id);
 
         if (!$doctor) {
-            return response()->json(['message' => 'Doctor not found'], 404);
+            return response()->json(['message' => 'Doctor not found',], 404);
         }
 
         return response()->json([

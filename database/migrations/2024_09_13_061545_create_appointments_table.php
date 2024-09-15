@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('age');
             $table->text('details')->nullable();
             $table->enum('appointment_status', ['pending', 'confirmed', 'cancelled'])->default('pending');
-            $table->timestamps(); // Created_at and updated_at columns
+            $table->timestamps();
         });
     }
 
