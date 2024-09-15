@@ -35,43 +35,44 @@
     <script>
         document.getElementById('registration-form').addEventListener('submit', function (e) {
             e.preventDefault();
-
+    
             // Create FormData object from the form
             const formData = new FormData(this);
-
+    
             // Convert FormData to JSON format
             const formObject = Object.fromEntries(formData.entries());
             const jsonData = JSON.stringify(formObject);
-
+    
             // Send data using Fetch API
             fetch('http://localhost:8000/api/signup', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Tell server we're sending JSON
-                    'Accept': 'application/json',       // Expect JSON response
+                    'Content-Type': 'application/json', 
                 },
                 body: jsonData,
             })
             .then(response => {
+                // Check if response is ok and show appropriate message
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json().then(err => {
+                        throw new Error(err.message || `HTTP error! status: ${response.status}`);
+                    });
                 }
                 return response.json();
             })
             .then(data => {
                 alert('Registration successful');
                 console.log(data);
+    
+                // Navigate to Login form after successful registration
+                window.location.href = 'login';
             })
             .catch(error => {
                 alert('Error during registration: ' + error.message);
                 console.error('Error:', error);
             });
         });
-
-        // Navigate to Login form when "Register" button is clicked
-        document.getElementById('registration-form').addEventListener('submit', function () {
-            window.location.href = 'login';
-        });
     </script>
+    
 </body>
 </html>

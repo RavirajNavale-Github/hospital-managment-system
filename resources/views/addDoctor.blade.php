@@ -44,7 +44,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-
         // Function to check if the user is authenticated
         function checkAuthentication() {
             const token = localStorage.getItem('token');
@@ -57,42 +56,43 @@
         // Call the function on page load
         checkAuthentication();
         
-        document.getElementById('addDoctorForm').addEventListener('submit', async function(event) {
+        document.getElementById('addDoctorForm').addEventListener('submit', function(event) {
             event.preventDefault();
-
+            
             // Prepare form data
             let formData = new FormData(this);
-
+            
             // Get token from localStorage
             let token = localStorage.getItem('token');
-
-            try {
-                let response = await fetch('http://localhost:8000/api/doctors', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: formData
-                });
-
+            
+            fetch('http://localhost:8000/api/doctors', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            })
+            .then(response => {
                 if (response.ok) {
-                    let result = await response.json();
-                    alert('Doctor added successfully!');
-                    console.log(result);
+                    return response.json();
                 } else {
-                    let error = await response.json();
-                    alert('Failed to add doctor: ' + error.message);
-                    console.error(error);
+                    return response.json().then(error => {
+                        throw new Error('Failed to add doctor: ' + (error.message || 'Unknown error'));
+                    });
                 }
-            } catch (error) {
+            })
+            .then(result => {
+                // Doctor added successfully
+                alert('Doctor added successfully!');
+                console.log(result);
+                
+                // Redirect to the dashboard after a successful addition
+                window.location.href = 'dashboard';
+            })
+            .catch(error => {
                 console.error('Error:', error);
                 alert('An error occurred. Please try again later.');
-            }
-        });
-
-        // Navigate to Dashboard form when "Add Doctor" button is clicked
-        document.getElementById('addDoctorForm').addEventListener('submit', function () {
-            window.location.href = 'dashboard';
+            });
         });
     </script>
 

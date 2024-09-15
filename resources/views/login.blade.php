@@ -19,8 +19,10 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <button id="register" type="button" class="btn btn-primary">Register</button>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <button id="register" type="button" class="btn btn-primary">Register</button>
+            </div>
         </form>
     </div>
 
@@ -28,8 +30,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-    <!-- Fetch Method to handle form submission and store token & token_type -->
+    <!-- JavaScript to handle form submission -->
     <script>
+        // Handle login form submission
         document.getElementById('login-form').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -44,14 +47,16 @@
             fetch('http://localhost:8000/api/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Tell server we're sending JSON
-                    'Accept': 'application/json',       // Expect JSON response
+                    'Content-Type': 'application/json',  // Tell server we're sending JSON
+                    'Accept': 'application/json',        // Expect JSON response
                 },
                 body: jsonData,
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json().then(err => {
+                        throw new Error(err.message || `HTTP error! status: ${response.status}`);
+                    });
                 }
                 return response.json();
             })
@@ -64,9 +69,10 @@
                 localStorage.setItem('token', token);
                 localStorage.setItem('token_type', tokenType);
                 
-                alert('Login successful, token and token type stored in localStorage');
-                console.log('Token:', token);
-                console.log('Token Type:', tokenType);
+                alert('Login successful! Token and token type stored in localStorage.');
+                
+                // Redirect to dashboard after successful login
+                window.location.href = 'dashboard';
             })
             .catch(error => {
                 alert('Error during login: ' + error.message);
@@ -74,14 +80,10 @@
             });
         });
 
-        // Navigate to Dashboard form when "Login" button is clicked
-        document.getElementById('login-form').addEventListener('submit', function () {
-            window.location.href = 'dashboard'; 
-        });
-
-        // Navigate to Registration form when "SignUp" button is clicked
+        // Handle Register button click
         document.getElementById('register').addEventListener('click', function () {
-            window.location.href = 'regitration'; 
+            // Redirect to the registration page
+            window.location.href = 'regitration';
         });
     </script>
 </body>
