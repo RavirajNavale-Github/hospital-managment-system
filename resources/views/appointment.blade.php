@@ -10,7 +10,7 @@
 <body>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Book an Appointment</h2>
-        <form id="appointment-form">
+        <form id="appointment-form" class="p-4 shadow rounded bg-light">
             <div class="mb-3">
                 <label for="patient_name" class="form-label">Patient Name</label>
                 <input type="text" class="form-control" id="patient_name" name="patient_name" required>

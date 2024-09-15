@@ -54,6 +54,9 @@
                 <button id="btn-logout" class="btn btn-danger w-100 mb-3">
                     <i class="bi bi-person-plus"></i> Logout
                 </button>
+                <button id="btn-back" class="btn btn-primary w-100 mb-3">
+                    <i class="bi bi-person-plus"></i> Go Back
+                </button>
             </div>
 
             <!-- Right Section: Content (Appointments by default) -->
@@ -78,8 +81,8 @@
                     <form id="update-doctor-form">
                         <input type="hidden" id="doctor-id">
                         <div class="mb-3">
-                            <label for="doctor-profile-image" class="form-label">Profile Image URL</label>
-                            <input type="text" class="form-control" id="doctor-profile-image">
+                            <label for="doctor-profile-image" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control" id="doctor-profile-image" accept="image/*">
                         </div>
                         <div class="mb-3">
                             <label for="doctor-name" class="form-label">Name</label>
@@ -218,12 +221,10 @@
                 return response.json();
             })
             .then(data => {
-                // Handle success
             //    console.log('Appointment status updated:', data);
                 alert('Appointment status updated successfully');
            })
            .catch(error => {
-               // Handle error
             //    console.error('Error updating appointment status:', error);
                alert('Failed to update appointment status');
            });
@@ -232,11 +233,12 @@
         // Load all doctors when "Doctors" button is clicked
         document.getElementById('btn-doctors').addEventListener('click', function () {
             fetch('http://localhost:8000/api/doctors', {
+                method: 'GET',
                 headers: setAuthHeaders({})
             })
             .then(response => response.json())
             .then(doctors => {
-                // console.log('Doctors data:', doctors.doctors); // Debugging line
+                // console.log('Doctors data:', doctors.doctors);
                 const rightSection = document.querySelector('.right-section');
                 rightSection.innerHTML = '<h4>Doctors List</h4>';
                 const cardContainer = document.createElement('div');
@@ -245,10 +247,11 @@
                 if (Array.isArray(doctors.doctors)) {
                     // console.log("log 01")
                     doctors.doctors.forEach(doctor => {
+                        // console.log('Image', doctor.profile_image);
                         const card = `
                         <div class="card doctor-card">
                             <div class="card-body">
-                                <img src="${doctor.profile_image}" alt="Profile" class="img-thumbnail mb-3">
+                                <img src="${doctor.profile_image}" width="150px" alt="Profile" class="img-thumbnail mb-3">
                                 <h5 class="card-title">${doctor.name}</h5>
                                 <p class="card-text"><strong>Email:</strong> ${doctor.email}</p>
                                 <p><strong>Phone:</strong> ${doctor.phone_number}</p>
@@ -296,7 +299,7 @@
             .then(doctor => {
                 // console.log("Single Doctor", doctor.doctor)
                 document.getElementById('doctor-id').value = doctor.doctor.id;
-                document.getElementById('doctor-profile-image').value = doctor.doctorprofile_image;
+                // document.getElementById('doctor-profile-image').value = doctor.doctorprofile_image;
                 document.getElementById('doctor-name').value = doctor.doctor.name;
                 document.getElementById('doctor-email').value = doctor.doctor.email;
                 document.getElementById('doctor-phone').value = doctor.doctor.phone_number;
@@ -310,37 +313,38 @@
 
         // Update doctor info
         document.getElementById('update-doctor-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const id = document.getElementById('doctor-id').value;
-            // console.log('Id', id)
-            const updatedData = {
-                profile_image: document.getElementById('doctor-profile-image').value,
-                name: document.getElementById('doctor-name').value,
-                email: document.getElementById('doctor-email').value,
-                phone_number: document.getElementById('doctor-phone').value,
-                department: document.getElementById('doctor-department').value,
-            };
-
-            fetch(`http://localhost:8000/api/doctors/${id}`, {
-                method: 'PUT',
-                headers: setAuthHeaders({
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }),
-                body: JSON.stringify(updatedData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                // console.log('Updated Data',data)
-                alert('Doctor updated successfully');
-                loadDashboardInfo();
-                document.getElementById('btn-doctors').click();  // Reload doctors list
-                const doctorModal = bootstrap.Modal.getInstance(document.getElementById('doctorModal'));
-                doctorModal.hide();  // Close modal
-            })
-            .catch(error => alert('Error updating doctor:', error));
+                e.preventDefault();
+             
+                const id = document.getElementById('doctor-id').value;
+                const profileImage = document.getElementById('doctor-profile-image').files[0];
+             
+                // Create a new FormData object
+                const formData = new FormData();
+                formData.append('profile_image', profileImage);
+                formData.append('name', document.getElementById('doctor-name').value);
+                formData.append('email', document.getElementById('doctor-email').value);
+                formData.append('phone_number', document.getElementById('doctor-phone').value);
+                formData.append('department', document.getElementById('doctor-department').value);
+             
+                fetch(`http://localhost:8000/api/doctors/${id}`, {
+                    method: 'POST',
+                    headers: setAuthHeaders({
+                        'Accept': 'application/json'
+                    }),
+                    body: formData
+               })
+                .then(response => response.json())
+                .then(data => {
+                    // console.log('Updated Data', data)
+                    alert('Doctor updated successfully');
+                    loadDashboardInfo();
+                    document.getElementById('btn-doctors').click(); 
+                    const doctorModal = bootstrap.Modal.getInstance(document.getElementById('doctorModal'));
+                     doctorModal.hide();  // Close modal
+                })
+                 .catch(error => alert('Error updating doctor:', error));
         });
+
 
         // Navigate to registration form when "Add Admin" button is clicked
         document.getElementById('btn-add-admin').addEventListener('click', function () {
@@ -379,6 +383,12 @@
                 // console.error('Error:', error);
                 alert('An error occurred. Please try again later.');
             }
+        });
+
+        
+        // Navigate to addDoctor form when "Add Doctor" button is clicked
+        document.getElementById('btn-back').addEventListener('click', function () {
+            location.reload();
         });
 
         // Initial load

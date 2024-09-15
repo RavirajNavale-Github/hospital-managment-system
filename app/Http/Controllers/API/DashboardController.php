@@ -83,12 +83,20 @@ class DashboardController extends Controller
     {
         $doctors = Doctor::all();
 
-        if (!$doctors) {
+        if ($doctors->isEmpty()) {
             return response()->json(['message' => 'No any doctor registered'], 404);
         }
 
+        $doctors->transform(function ($doctor) {
+            if ($doctor->profile_image) {
+                $doctor->profile_image = url('storage/' . $doctor->profile_image);
+            }
+            return $doctor;
+        });
+
         return response()->json(['message' => 'All Doctors', 'doctors' => $doctors]);
     }
+
 
     //Get single doctor
     public function getDoctor(Request $request, $id)
@@ -153,50 +161,39 @@ class DashboardController extends Controller
         $doctor = Doctor::find($id);
 
         if (!$doctor) {
-            return response()->json(['message' => 'Doctor not found',], 404);
+            return response()->json(['message' => 'Doctor not found'], 404);
         }
 
-        return response()->json([
-            'received_data' => $request->all(),
-            'files' => $request->file(), // Check if any file is being received
-        ], 200);
-
-        // Validate the incoming request for both form-data and JSON
-        $validator = Validator::make($request->all(), [
-            'profile_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+        // Validate the incoming data
+        $validatedData = $request->validate([
+            'profile_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048', // Optional file input validation
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
+            'email' => 'required|email|unique:doctors,email,' . $doctor->id, // Ignore unique check for current doctor
             'phone_number' => 'required|string|max:15',
             'department' => 'required|string|max:255',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $validator->errors(),
-                'input_data' => $request->all(),
-            ], 422);
-        }
-
-
-        // Handle profile image upload (keep old one if not provided)
+        // Check if a new profile image is uploaded
         if ($request->hasFile('profile_image')) {
-            // Store the new image and update the path
+            // Store the new profile image
             $imagePath = $request->file('profile_image')->store('images/doctors', 'public');
             $doctor->profile_image = $imagePath;
         }
 
-        // Update the doctor's details explicitly with new values from the request
-        $doctor->name = $request->input('name');
-        $doctor->email = $request->input('email');
-        $doctor->phone_number = $request->input('phone_number');
-        $doctor->department = $request->input('department');
+        // If no new profile image is uploaded, the existing one remains unchanged
 
-        // Save the updated doctor details
+        // Update other fields
+        $doctor->name = $validatedData['name'];
+        $doctor->email = $validatedData['email'];
+        $doctor->phone_number = $validatedData['phone_number'];
+        $doctor->department = $validatedData['department'];
+
+        // Save the updated doctor record
         $doctor->save();
 
-        return response()->json(['message' => 'Doctor updated successfully', 'doctor' => $doctor], 200);
+        return response()->json(['message' => 'Doctor updated successfully', 'doctor' => $doctor]);
     }
+
 
 
 

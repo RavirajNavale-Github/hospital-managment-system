@@ -38,9 +38,6 @@
 
             <button type="submit" class="btn btn-primary w-100">Add Doctor</button>
         </form>
-
-        <!-- Success and Error Alerts -->
-        <div id="responseMessage" class="mt-3"></div>
     </div>
 
     <!-- Bootstrap 5 JS Bundle (includes Popper) -->
@@ -67,7 +64,7 @@
             let formData = new FormData(this);
 
             // Get token from localStorage
-            let token = localStorage.getItem('token'); // Assuming you have stored the token as 'token'
+            let token = localStorage.getItem('token');
 
             try {
                 let response = await fetch('http://localhost:8000/api/doctors', {
@@ -80,22 +77,22 @@
 
                 if (response.ok) {
                     let result = await response.json();
-                    alert('Doctor added successfully!'); // Success message
+                    alert('Doctor added successfully!');
                     console.log(result);
                 } else {
                     let error = await response.json();
-                    alert('Failed to add doctor: ' + error.message); // Error message
+                    alert('Failed to add doctor: ' + error.message);
                     console.error(error);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred. Please try again later.'); // General error message
+                alert('An error occurred. Please try again later.');
             }
         });
 
         // Navigate to Dashboard form when "Add Doctor" button is clicked
         document.getElementById('addDoctorForm').addEventListener('submit', function () {
-            window.location.href = 'dashboard';  // Adjust path as needed
+            window.location.href = 'dashboard';
         });
     </script>
 

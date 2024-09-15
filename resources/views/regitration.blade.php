@@ -67,6 +67,11 @@
                 console.error('Error:', error);
             });
         });
+
+        // Navigate to Login form when "Register" button is clicked
+        document.getElementById('registration-form').addEventListener('submit', function () {
+            window.location.href = 'login';
+        });
     </script>
 </body>
 </html>
