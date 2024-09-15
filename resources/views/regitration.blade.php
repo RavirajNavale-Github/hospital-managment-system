@@ -31,7 +31,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-    <!-- Fetch Method to handle form submission -->
     <script>
         document.getElementById('registration-form').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -43,7 +42,6 @@
             const formObject = Object.fromEntries(formData.entries());
             const jsonData = JSON.stringify(formObject);
     
-            // Send data using Fetch API
             fetch('http://localhost:8000/api/signup', {
                 method: 'POST',
                 headers: {
@@ -52,7 +50,6 @@
                 body: jsonData,
             })
             .then(response => {
-                // Check if response is ok and show appropriate message
                 if (!response.ok) {
                     return response.json().then(err => {
                         throw new Error(err.message || `HTTP error! status: ${response.status}`);
@@ -64,7 +61,6 @@
                 alert('Registration successful');
                 console.log(data);
     
-                // Navigate to Login form after successful registration
                 window.location.href = 'login';
             })
             .catch(error => {

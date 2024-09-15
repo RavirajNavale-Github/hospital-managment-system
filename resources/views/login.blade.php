@@ -30,9 +30,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-    <!-- JavaScript to handle form submission -->
     <script>
-        // Handle login form submission
         document.getElementById('login-form').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -43,12 +41,11 @@
             const formObject = Object.fromEntries(formData.entries());
             const jsonData = JSON.stringify(formObject);
 
-            // Send data using Fetch API
             fetch('http://localhost:8000/api/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',  // Tell server we're sending JSON
-                    'Accept': 'application/json',        // Expect JSON response
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json',  
                 },
                 body: jsonData,
             })
@@ -61,17 +58,14 @@
                 return response.json();
             })
             .then(data => {
-                // Assuming the response contains both 'token' and 'token_type'
                 const token = data.token;
                 const tokenType = data.token_type;
                 
-                // Store token and token_type in localStorage
                 localStorage.setItem('token', token);
                 localStorage.setItem('token_type', tokenType);
                 
                 alert('Login successful! Token and token type stored in localStorage.');
                 
-                // Redirect to dashboard after successful login
                 window.location.href = 'dashboard';
             })
             .catch(error => {
@@ -80,9 +74,7 @@
             });
         });
 
-        // Handle Register button click
         document.getElementById('register').addEventListener('click', function () {
-            // Redirect to the registration page
             window.location.href = 'regitration';
         });
     </script>

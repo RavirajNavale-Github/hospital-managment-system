@@ -64,7 +64,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-    <!-- Fetch Method to handle form submission -->
+    
     <script>
         document.getElementById('appointment-form').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -80,8 +80,8 @@
             fetch('http://localhost:8000/api/appointments', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', // Tell server we're sending JSON
-                    'Accept': 'application/json',       // Expect JSON response
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json',      
                 },
                 body: jsonData,
             })
