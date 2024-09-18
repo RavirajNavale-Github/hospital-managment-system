@@ -6,24 +6,62 @@
     <title>Login Form</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to left, #00c6ff, #0072ff);
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+        .form-container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #0072ff;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #0072ff, #00c6ff);
+            border: none;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+        }
+        .d-flex {
+            gap: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Login</h2>
-        <form id="login-form" class="p-4 shadow rounded bg-light">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Login</button>
-                <button id="register" type="button" class="btn btn-primary">Register</button>
-            </div>
-        </form>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4">Login</h2>
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <button id="register" type="button" class="btn btn-secondary w-100">Register</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Bootstrap 5 JS & dependencies (Popper & Bootstrap) -->
@@ -75,7 +113,7 @@
         });
 
         document.getElementById('register').addEventListener('click', function () {
-            window.location.href = 'regitration';
+            window.location.href = 'registration'; // Corrected URL
         });
     </script>
 </body>
