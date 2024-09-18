@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\AppointmentBooked;
+use Illuminate\Support\Facades\Mail;
 
 class AppointmentController extends Controller
 {
@@ -39,6 +41,13 @@ class AppointmentController extends Controller
 
         // If validation passes, create the appointment
         $appointment = Appointment::create($request->all());
+
+        // Send confirmation email
+        Mail::to($request->email)->send(new AppointmentBooked(
+            $request->patient_name,
+            $request->doctor,
+            $request->booking_date
+        ));
 
         //return success message
         return response()->json([
