@@ -111,50 +111,6 @@ class DashboardController extends Controller
         return response()->json(['message' => 'Selected single doctor', 'doctor' => $doctor]);
     }
 
-    //Update doctor details
-    // public function updateDoctor(Request $request, $id)
-    // {
-    //     // Find the doctor by ID
-    //     $doctor = Doctor::find($id);
-
-    //     if (!$doctor) {
-    //         return response()->json(['message' => 'Doctor not found'], 404);
-    //     }
-
-    //     // Validate the incoming request
-    //     $validator = Validator::make($request->all(), [
-    //         'profile_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-    //         'name' => 'required|string|max:255', // Name is required to be updated
-    //         'email' => 'required|email|unique:doctors,email,' . $doctor->id,
-    //         'phone_number' => 'required|string|max:15',
-    //         'department' => 'required|string|max:255',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json($validator->errors(), 422);
-    //     }
-
-    //     // Handle profile image upload (keep old one if not provided)
-    //     if ($request->hasFile('profile_image')) {
-    //         // Store the new image and update the path
-    //         $imagePath = $request->file('profile_image')->store('images/doctors', 'public');
-    //         $doctor->profile_image = $imagePath;
-    //     }
-
-    //     // Update the doctor's details explicitly with new values from the request
-    //     $doctor->name = $request->input('name');
-    //     $doctor->email = $request->input('email');
-    //     $doctor->phone_number = $request->input('phone_number');
-    //     $doctor->department = $request->input('department');
-
-    //     // Save the updated doctor details
-    //     $doctor->save();
-
-    //     return response()->json(['message' => 'Doctor updated successfully', 'doctor' => $doctor], 200);
-    // }
-
-
-
     public function updateDoctor(Request $request, $id)
     {
         // Find the doctor by ID

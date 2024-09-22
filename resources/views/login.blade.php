@@ -10,6 +10,7 @@
         body {
             background: linear-gradient(to left, #00c6ff, #0072ff);
             font-family: Arial, sans-serif;
+            height: 100vh;
         }
         .container {
             padding-top: 5rem;
@@ -113,7 +114,7 @@
         });
 
         document.getElementById('register').addEventListener('click', function () {
-            window.location.href = 'registration'; // Corrected URL
+            window.location.href = 'regitration'; // Corrected URL
         });
     </script>
 </body>

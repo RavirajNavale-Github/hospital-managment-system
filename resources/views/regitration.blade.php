@@ -10,6 +10,7 @@
         body {
             background: linear-gradient(45deg, #1155cb, #a6c0fe);
             font-family: Arial, sans-serif;
+            height: 100vh;
         }
         .container {
             padding-top: 5rem;
